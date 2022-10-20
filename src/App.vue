@@ -1,26 +1,43 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="name">{{ name }}</div> 
+  <button
+    v-on:click="updateName"
+    class="btn btn-primary"
+    >
+    click
+    </button>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import { ref } from 'vue';
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+  setup() {
+    const name = ref('EunHye');
+    // reactive
+    // const name = reactive([]);
+    //배열이나 오브젝트를 사용 시 reactive로 사용해보자.
+
+    // const greeting = (name) => {
+    //   return 'Hello, '+ name;
+    // };
+    // const greet = greeting(name);
+
+    const updateName = () => {
+      // ref .value를 꼭 사용!
+      name.value = 'EunHye Sun';
+      console.log(name);
+    }
+
+    return {
+      name,
+      updateName
+      // greeting,
+      // greet 
+    }
+  },
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+.name {color:green;font-size:20px;font-weight: bold;}
 </style>
