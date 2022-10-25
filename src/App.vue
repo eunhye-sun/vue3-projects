@@ -1,67 +1,114 @@
-<template> 
-<!-- v-bind: :생략가능 -->
-<!-- v-on: = @ -->
-<!-- v-medel value 바인딩도 해주고, 값이 변경될때 데이터까지 같이 업데이트해주는 역활까지 제공.  -->
-  <!-- <div :class="nameClass">{{ name }}</div>  -->
-  <input 
-  type="text" 
-  v-model="name"
-  >
-  <!-- <input v-bind:type="type" v-bind:value="name"> -->
-  <button
-    @click="onSubmit"
-    class="btn btn-primary"
+<template>
+  <div class="container">
+    <h2>To-Do List</h2>
+    <form @submit.prevent="onSubmit">
+      <div class="d-flex" >
+        <div class="flex-grow-1 mr-2">
+        <input
+        class="form-control" 
+        type="text"
+        v-model="todo"
+        placeholder="Type new to-do"
+        >
+        </div>
+        <div>
+          <button
+          class="btn btn-primary ml-2"
+          type="submit"
+          >
+          Add
+          </button>
+        </div>
+      </div>
+      <div v-show="hasError" style="color:red">
+        Tihs filed cannot be empty
+      </div>
+    </form>
+    <div v-if="!todos.length">추가된 Todo가 없습니다.</div>
+    <div
+      v-for="(todo, index) in todos"
+      :key="todo.id"
+      class="card mt-2"
     >
-    click
-    </button>
-</template>
+      <div class="card-body p-2 d-flex align-items-center">
+        <div class="form-check flex-grow-1">
+          <input 
+            class="form-check-input" 
+            type="checkbox" 
+            v-model="todo.completed"
+            >
+          <label 
+            :class="{ todo: todo.completed }"
+            class="form-check-label"
+          >
+            {{ todo.subject}}
+          </label>
+        </div>
+        <div>
+          <button 
+            class="btn btn-danger btn-sm"
+            @click="deleteTodo(index)"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+ </template>
+ 
+ <script>
+ import { ref } from 'vue';
 
-<script>
-import { ref } from 'vue';
-export default {
-  setup() {
-    const name = ref('EunHye');
-    // const type = ref('number');
-    // const nameClass = ref('');
-
-    // reactive
-    // const name = reactive([]);
-    //arrey나 오브젝트를 사용 시 reactive로 사용해보자.
-
-    // const greeting = (name) => {
-    //   return 'Hello, '+ name;
-    // };
-    // const greet = greeting(name);
-
-    // const updateName = () => {
-      // ref .value를 꼭 사용!
-      // name.value = 'Sun';
-      // type.value = 'text';
-      // nameClass.value = 'name';
-      // console.log(name);
-    // }
-    const onSubmit = () => {
-      console.log(name.value);
-    };
-    // const updateName = (e) => {
-    //   name.value = e.target.value;
-    //   // console.log(e.target.value);
-    // }
-
-    return {
-      name,
-      onSubmit,
-      // updateName,
-      // type,
-      // nameClass
-      // greeting,
-      // greet 
+ export default {
+   setup() {
+    const toggle = ref(false);
+    const todo = ref('');
+    const todos = ref([]);
+    const todoStyle = {
+      textDecoration: 'line-through',
+      color: 'gray'
     }
-  },
-}
-</script>
 
-<style>
-.name {color:green;font-size:20px;font-weight: bold;}
-</style>
-<!-- 태그의 속성값에 v-bind 사용 -->
+    const hasError = ref(false);
+
+    const onSubmit = () => {
+      if(todo.value === '') {
+        hasError.value = true;
+      } else {
+          todos.value.push({
+          id: Date.now(),
+          subject: todo.value,
+          completed: false,
+        });
+        hasError.value = false;
+        todo.value='';
+      }
+     };
+     //toogle기능
+     const onToggle = () => {
+      toggle.value = !toggle.value;
+     }
+
+     //delete
+     const deleteTodo = (index) => {
+      todos.value.splice(index, 1);
+     }
+ 
+     return {
+      todo,
+      todos,
+      toggle,
+      hasError,
+      todoStyle,
+      deleteTodo,
+      onToggle,
+      onSubmit,
+   };
+ }
+}
+ </script>
+ 
+ <style>
+ .todo{color:gray;text-decoration: line-through;}
+ </style> 
