@@ -94,7 +94,7 @@
      const deleteTodo = (index) => {
       todos.value.splice(index, 1);
      }
- 
+     // 꼭 까먹지 말고 return 해주기
      return {
       todo,
       todos,
